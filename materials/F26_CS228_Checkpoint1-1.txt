@@ -1,0 +1,82 @@
+CS 228: Biometric Security with AI
+Fall 2026, Dr. Amith Kamath Belman
+
+Project Checkpoint Assignment 1
+Due: Thursday, Oct 27, 2026
+One submission per team (or per individual for a one person project). No late submissions.
+Total 100 points;
+Expected submission: a 3 to 4 page technical report as a PDF (IEEE or ACM LaTeX template) and a link to a
+working code repository.
+AI usage: You may use an AI assistant for coding and for writing the document, but do not paste in anything
+you have not read and approved. Everything you submit is your work, and you will be asked to explain and
+elaborate on it. A part of the work that you cannot explain when questioned is treated as plagiarism.
+
+1. Overview
+The checkpoint is the first technical deliverable in the project. By the due date you must have secured your
+dataset, explored it, and measured a simple baseline. Each team submits one PDF report and a link to a
+functional code repository, and the report must follow the format below.
+
+2. The technical progress report
+Write the report in any one of these four templates (3 to 4 pages including figures and tables; references do
+not count toward the length):
+• ACM single column: https://www.overleaf.com/latex/templates/acm-conference-proceedingsprimary-article-template/wbvnghjbzwpc
+• ACM double column: https://www.overleaf.com/latex/templates/association-for-computingmachinery-acm-large-2-column-format-template/qwcgpbmkkvpq
+• IEEE single column: https://www.overleaf.com/latex/templates/one-column-ieee-journalarticle/ykctxqgxptrs
+• IEEE double column: https://www.overleaf.com/latex/templates/ieee-conferencetemplate/grfzhhncsfqn
+The cover block (title, team members, and the nature of the project in one line: build, attack, or test) does
+not count toward the length. The report must contain the following four sections; each is worth 20 points,
+and the repository in Section 3 is the fifth 20.
+
+I. Problem statement and motivation (20 points)
+• Give a precise definition of the problem you are solving.
+• Explain why the problem matters in the current security landscape (for example spoofing, data
+poisoning, adversarial examples, continuous authentication, or demographic differentials in error
+rates).
+• If your project scope has shifted since the proposal report, or since the questions at your proposal
+presentation, highlight the changes in a different text color.
+• State the nature of the project in one line, as in the proposal: build robust X, attack X, or test the
+feasibility of Y.
+
+II. Data engineering (20 points)
+Describe:
+• Dataset origin: where the data came from (a public repository with its license and access terms,
+web collection, or your own collection with the consent of the people recorded), with a citation.
+• Dataset characteristics: number of subjects, samples per subject, sessions, image resolution or
+signal sampling rate, and the labels (identity, genuine or impostor, live or spoof). Adjust the list to
+your data.
+• Cleaning and preprocessing: the steps taken for missing values, normalization, alignment or
+cropping, and feature reduction (PCA, correlation based selection, and so on), with the reason for
+each step.
+• Schema sanity and quality: outliers, anomalies, duplicates, or mislabeled samples found at the first
+load, and the shortcomings of the data for your problem.
+• The split :state the split and data used clearly.
+
+III. Exploratory data analysis (20 points)
+Provide some suitable visualization for the data:
+• Univariate analysis: histograms and box plots of key features (or of image statistics, signal lengths,
+and quality scores when the raw data are images or signals).
+• Bivariate analysis: a correlation matrix or scatter plots showing how features relate to each other
+and to the labels.
+• Class balance: a visual of the class distribution (subjects, genuine against impostor, live against
+spoof) and what it implies: oversampling, balanced impostor sampling, or per class metrics.
+• Every figure must a title, labeled axes, and one sentence on what you want to express through it.
+
+IV. Baseline implementation and preliminary results (20 points)
+Implement a simple baseline (majority class, k-NN, logistic regression, a small pretrained CNN, or the
+reference method your three papers compare against) and report:
+• Performance metrics, with the count for every rate.
+• Threshold analysis: where a threshold exists, the EER or a plot of FAR against FRR, and the operating
+point you would choose and why.
+• Error analysis: which kinds of samples the baseline fails on, with a hypothesis for why.
+• Fix and report your random seeds; every number in this section must be reproducible from the
+repository at the submitted commit.
+
+3. Code repository submission (20 points)
+Include a link to a GitHub or GitLab repository that can be used by me:
+• a README.md with instructions for setting up the environment.
+• documented Python scripts or Jupyter notebooks for data loading, the EDA, and the baseline
+training and evaluation;
+• a list of dependencies (requirements.txt or an environment file);
+• no dataset in the repository: commit the script that fetches it, or the instructions for placing it.
+
+
