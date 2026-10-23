@@ -6,3 +6,5 @@ data/*
 !data/.gitkeep
 .env
 .DS_Store
+outputs/eda/
+outputs/fixture/

@@ -8,10 +8,18 @@ authors = [
 ]
 requires-python = ">=3.14"
 dependencies = [
+    "ipykernel>=7.4.0",
+    "matplotlib>=3.11.2",
+    "nbconvert>=7.17.2",
+    "nbformat>=5.11.1",
     "numpy>=2.5.4",
     "pandas>=3.0.6",
+    "pillow>=13.0.0",
     "scikit-learn>=1.9.1",
+    "scipy>=1.18.1",
+    "seaborn>=0.13.2",
     "torch>=2.14.1",
+    "tqdm>=4.70.1",
 ]
 
 [project.scripts]
@@ -20,3 +28,9 @@ checkpoint1 = "checkpoint1:main"
 [build-system]
 requires = ["uv_build>=0.13.4,<0.14.0"]
 build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "ipykernel>=7.4.0",
+    "jupyterlab>=4.6.4",
+]
