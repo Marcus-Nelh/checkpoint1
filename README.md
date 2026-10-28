@@ -10,16 +10,18 @@
 3. Install dependencies: `uv sync` (or `pip install -r requirements.txt`).
 
 ## Dataset (CelebA-Spoof)
-The dataset is not stored in this repository. Download it from
-https://github.com/ZhangYuanhan-AI/CelebA-Spoof (follow their access terms and license) and place it as:
 
-```
-data/CelebA_Spoof/
-  Data/{train,test}/<subject_id>/{live,spoof}/<img>.{jpg,png}  (+ <img>_BB.txt face boxes)
-  metas/intra_test/{train,test}_label.json
-```
+This project uses [CelebA-Spoof](https://github.com/ZhangYuanhan-AI/CelebA-Spoof)
+(non-commercial research use only; not redistributed in this repo).
 
-To use another location, set `CELEBA_SPOOF_ROOT` or pass `--data-root`.
+1. Install rclone (see https://rclone.org/install/).
+2. Configure a Google Drive remote named `gdrive`:
+   `rclone config` → new remote → name `gdrive` → storage `drive` → scope `drive.readonly`.
+3. Download (~80 GB, needs ~2x free disk space):
+   ```bash
+   bash scripts/download_celeba_spoof.sh data/raw/celeba_spoof
+   ```
+4. Verify: `sha256sum -c data/raw/celeba_spoof/SHA256SUMS.txt`
 
 ### Synthetic test data
 Until the real data is downloaded, a small fake dataset with the same layout and label schema
