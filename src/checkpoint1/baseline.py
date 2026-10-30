@@ -12,6 +12,7 @@ import argparse
 import json
 import os
 import random
+import shutil
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -45,6 +46,13 @@ def pick_device():
     if torch.backends.mps.is_available():
         return torch.device("mps")
     return torch.device("cpu")
+
+
+def default_workers():
+    """DataLoader workers: none when /dev/shm is too small to share batches (e.g. Docker's 64 MB)."""
+    if Path("/dev/shm").exists() and shutil.disk_usage("/dev/shm").total < 2**30:
+        return 0
+    return min(8, (os.cpu_count() or 2) - 1)
 
 
 # ----------------------------------------------------------------------------- data
@@ -239,7 +247,7 @@ def run_baseline(root=None, manifest_dir="data/processed", out_dir="outputs/base
     set_seeds(seed)
     device = pick_device()
     if workers is None:
-        workers = min(8, (os.cpu_count() or 2) - 1)
+        workers = default_workers()
 
     sizes = sizes or {}
     splits = {}
@@ -293,7 +301,7 @@ def main():
     parser.add_argument("--epochs", type=int, default=3)
     parser.add_argument("--batch-size", type=int, default=64)
     parser.add_argument("--lr", type=float, default=1e-4)
-    parser.add_argument("--workers", type=int, default=None, help="DataLoader workers (default: min(8, CPUs - 1))")
+    parser.add_argument("--workers", type=int, default=None, help="DataLoader workers (default: 0 if /dev/shm < 1 GB, else min(8, CPUs - 1))")
     parser.add_argument("--recompute", action="store_true", help="retrain even if the cached model matches")
     args = parser.parse_args()
 

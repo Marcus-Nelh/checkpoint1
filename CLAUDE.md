@@ -12,7 +12,7 @@ CS 228 Project Checkpoint 1: Mixture of Experts face anti-spoofing on CelebA-Spo
 - The dataset root comes from `--root`/`--data-root` or `$CELEBA_SPOOF_ROOT`.
 - `python -m checkpoint1.preprocess [--n-sample N|all]` writes `manifest_{train,val,test}.csv` and `dropped_samples.csv` to `data/processed/`. The EDA and baseline need these files.
 - `python -m checkpoint1.eda [--n-sample N|all]` writes figures to `outputs/figures/`, plus `image_stats.csv` (cache) and `summary.csv` to `outputs/eda/`.
-- `python -m checkpoint1.baseline [--n-train|--n-val|--n-test N|all] [--epochs 3] [--recompute]` writes to `outputs/baseline/`. The model and scores are reused while `config.json` matches. In Docker, use `--workers 0`, because the 64 MB `/dev/shm` is too small for DataLoader workers.
+- `python -m checkpoint1.baseline [--n-train|--n-val|--n-test N|all] [--epochs 3] [--recompute]` writes to `outputs/baseline/`. The model and scores are reused while `config.json` matches. DataLoader workers default to 0 when `/dev/shm` is under 1 GB (Docker's is 64 MB), since more would hang.
 - Notebooks `preprocessing`, `eda` and `baseline` call the code above and hold all report numbers. Execute them with `uv run jupyter nbconvert --execute`.
 - No tests or linter.
 

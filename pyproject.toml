@@ -1,7 +1,7 @@
 [project]
 name = "checkpoint1"
 version = "0.1.0"
-description = "Add your description here"
+description = "Mixture-of-experts face anti-spoofing on CelebA-Spoof (CS 228 checkpoint 1)"
 readme = "README.md"
 authors = [
     { name = "Marcus Nelhams", email = "marcus.nelhams@gmail.com" }
