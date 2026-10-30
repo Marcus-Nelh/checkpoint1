@@ -1,45 +1,35 @@
 # CS 228 Project Checkpoint 1: Mixture of Experts Face Anti-Spoofing
 
-## Environment Setup
-1. Clone the repository.
-2. Create and activate a Python virtual environment (e.g., using `uv` or `venv`):
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate
-   ```
-3. Install dependencies: `uv sync` (or `pip install -r requirements.txt`).
+## Setup
+```bash
+uv sync                            # or: python -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt
+export CELEBA_SPOOF_ROOT=/path/to/CelebA_Spoof
+```
 
 ## Dataset (CelebA-Spoof)
+[CelebA-Spoof](https://github.com/ZhangYuanhan-AI/CelebA-Spoof) is for non-commercial research only
+and is not included in this repository.
 
-This project uses [CelebA-Spoof](https://github.com/ZhangYuanhan-AI/CelebA-Spoof)
-(non-commercial research use only; not redistributed in this repo).
+**Browser:** download every part (`CelebA_Spoof.zip.001`, `.002`, …) from the Google Drive folder linked in the
+[CelebA-Spoof README](https://github.com/ZhangYuanhan-AI/CelebA-Spoof#dataset-downloads) into one folder, then
+run `7z x CelebA_Spoof.zip.001`. This needs about 2x the ~80 GB archive size in free space.
 
-1. Install rclone (see https://rclone.org/install/).
-2. Configure a Google Drive remote named `gdrive`:
-   `rclone config` → new remote → name `gdrive` → storage `drive` → scope `drive.readonly`.
-3. Download (~80 GB, needs ~2x free disk space):
-   ```bash
-   bash scripts/download_celeba_spoof.sh data/raw/celeba_spoof
-   ```
-4. Verify: `sha256sum -c data/raw/celeba_spoof/SHA256SUMS.txt`
-
-### Synthetic test data
-Until the real data is downloaded, a small fake dataset with the same layout and label schema
-(plus a few planted anomalies) can be generated to exercise the whole pipeline:
-
+**Script:** install [rclone](https://rclone.org/install/), run `rclone config` and create a remote named `gdrive`
+(storage `drive`, scope `drive.readonly`), then:
 ```bash
-uv run python -m checkpoint1.fixture            # writes data/fixture/CelebA_Spoof
+bash scripts/fetch_data.sh data/raw/celeba_spoof
 ```
 
-The notebook uses this fixture automatically when `data/CelebA_Spoof` is absent (results go to `outputs/fixture/`).
+The folder that `CELEBA_SPOOF_ROOT` points to must contain `Data/` and `metas/intra_test/{train,test}_label.json`.
 
-## Exploratory data analysis
-```bash
-uv run python -m checkpoint1.eda                # real data, 10k-image pixel-stat sample, seed 228
-uv run python -m checkpoint1.eda --data-root data/fixture/CelebA_Spoof --n-sample 100 \
-    --out-dir outputs/fixture/eda --fig-dir outputs/fixture/figures   # synthetic data
-```
-Outputs: 13 figures and `captions.md` in `outputs/figures/`; `image_stats.csv` and `summary.csv`
-(counts and data-quality anomalies) in `outputs/eda/`. `notebooks/01_eda.ipynb` runs the same
-code and shows the figures inline. Pixel statistics use a fixed-seed sample (`--seed`, default 228);
-label statistics use every image.
+## Running
+Use seed 228 for every step.
+
+| Step | Command | Notebook |
+|---|---|---|
+| Cleaning, splits | `uv run python -m checkpoint1.preprocess --out data/processed` | `notebooks/preprocessing.ipynb` |
+| EDA | `uv run python -m checkpoint1.eda --n-sample all` | `notebooks/eda.ipynb` |
+| Baseline | `uv run python -m checkpoint1.baseline --n-train all --n-val all --n-test all` | `notebooks/baseline.ipynb` |
+
+Run `checkpoint1.preprocess` before the notebooks and the baseline. Each script accepts `--help`. For a quick test, pass a
+small `--n-sample` (or `--n-train/--n-val/--n-test`) and a separate output folder, e.g. under `outputs/smoke/`.

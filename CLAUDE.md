@@ -4,18 +4,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-CS 228 Project Checkpoint 1: Mixture of Experts face anti-spoofing. The EDA (Section III of the checkpoint) is implemented; the baseline (Section IV) and the MoE models are not. `src/checkpoint1/__init__.py` still holds a placeholder `main()`. Dataset: CelebA-Spoof, which is not in the repo (see README for the expected `data/CelebA_Spoof/` layout).
+CS 228 Project Checkpoint 1: Mixture of Experts face anti-spoofing on CelebA-Spoof (not in the repo; see README). Done: cleaning/splits (`checkpoint1.preprocess`), EDA (`checkpoint1.eda`) and a ResNet-18 baseline (`checkpoint1.baseline`). The MoE models are not implemented, and `src/checkpoint1/__init__.py` holds a placeholder `main()`.
 
 ## Environment
 
-- Python 3.14 (`.python-version`), managed with `uv` (`uv.lock`, `uv_build` backend, src layout). Dependencies in `pyproject.toml`: numpy, pandas, scikit-learn, torch, matplotlib, seaborn, pillow, scipy, tqdm, plus ipykernel/nbformat/nbconvert for the notebook.
-- `requirements.txt` is generated with `uv export --no-hashes --no-dev --no-emit-project > requirements.txt`; `pyproject.toml`/`uv.lock` are the source of truth for dependencies.
-- Setup: `uv sync` (or `python -m venv .venv && source .venv/bin/activate`, per the README).
-- Run the entry point: `uv run checkpoint1` (script `checkpoint1 = "checkpoint1:main"`).
-- Synthetic dataset (no real data needed): `uv run python -m checkpoint1.fixture` writes `data/fixture/CelebA_Spoof`.
-- EDA: `uv run python -m checkpoint1.eda [--data-root DIR] [--n-sample N] [--seed 228] [--recompute]` writes figures + `captions.md` to `outputs/figures/` and stats/summary CSVs to `outputs/eda/`. Exits with a readable message if the dataset is missing. For fixture runs pass `--out-dir outputs/fixture/eda --fig-dir outputs/fixture/figures` and `--n-sample 100` (a smaller sample may miss the planted anomalies).
-- No tests, linter, or build config exist yet.
+- Python 3.14, managed with `uv` (`pyproject.toml`/`uv.lock` are the source of truth). Regenerate `requirements.txt` with `uv export --no-hashes --no-dev --no-emit-project > requirements.txt`.
+- The dataset root comes from `--root`/`--data-root` or `$CELEBA_SPOOF_ROOT`.
+- `python -m checkpoint1.preprocess [--n-sample N|all]` writes `manifest_{train,val,test}.csv` and `dropped_samples.csv` to `data/processed/`. The EDA and baseline need these files.
+- `python -m checkpoint1.eda [--n-sample N|all]` writes figures to `outputs/figures/`, plus `image_stats.csv` (cache) and `summary.csv` to `outputs/eda/`.
+- `python -m checkpoint1.baseline [--n-train|--n-val|--n-test N|all] [--epochs 3] [--recompute]` writes to `outputs/baseline/`. The model and scores are reused while `config.json` matches. In Docker, use `--workers 0`, because the 64 MB `/dev/shm` is too small for DataLoader workers.
+- Notebooks `preprocessing`, `eda` and `baseline` call the code above and hold all report numbers. Execute them with `uv run jupyter nbconvert --execute`.
+- No tests or linter.
 
-## Layout conventions
+## Conventions
 
-- Package code goes in `src/checkpoint1/`; datasets in `data/`; exploratory work in `notebooks/`; results/artifacts in `outputs/`.
+- Keep the code simple and readable. Use descriptive variable names, few comments, and only what the checkpoint spec asks for.
+- Package code goes in `src/checkpoint1/`, datasets in `data/`, notebooks in `notebooks/`, results in `outputs/`.

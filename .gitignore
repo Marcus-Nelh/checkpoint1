@@ -7,6 +7,6 @@ data/*
 .env
 .DS_Store
 outputs/eda/
-outputs/fixture/
 data/
 outputs/
+local/
